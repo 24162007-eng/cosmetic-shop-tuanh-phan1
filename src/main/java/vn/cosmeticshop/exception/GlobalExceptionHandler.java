@@ -8,10 +8,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.SignatureException;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -36,18 +32,13 @@ public class GlobalExceptionHandler {
         return build(403, exception.getMessage(), "You are not authorized to access this resource");
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ProblemDetail handleExpiredJwt(ExpiredJwtException exception) {
+    @ExceptionHandler(TokenExpiredException.class)
+    public ProblemDetail handleExpiredToken(TokenExpiredException exception) {
         return build(401, exception.getMessage(), "The JWT token has expired");
     }
 
-    @ExceptionHandler(SignatureException.class)
-    public ProblemDetail handleSignature(SignatureException exception) {
-        return build(401, exception.getMessage(), "The JWT signature is invalid");
-    }
-
-    @ExceptionHandler(JwtException.class)
-    public ProblemDetail handleJwt(JwtException exception) {
+    @ExceptionHandler(InvalidTokenException.class)
+    public ProblemDetail handleInvalidToken(InvalidTokenException exception) {
         return build(401, exception.getMessage(), "The JWT token is invalid");
     }
 
